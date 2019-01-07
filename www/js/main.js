@@ -191,7 +191,6 @@ var BB = {
           }
         }
         
-        BB.accelLabel.setText(accelText);
     },
 
     // Reset current game and start new one
@@ -340,6 +339,7 @@ function init() {
     });
 
     requestAnimFrame(animate);
+    BB.accelLabel.setText(accelText);
 }
 
 
