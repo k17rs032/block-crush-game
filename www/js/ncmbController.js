@@ -11,8 +11,9 @@ var ncmbController = {
         var self = this;
         self.ncmb = new NCMB(self.APPLICATION_KEY, self.CLIENT_KEY);    // mobile backendの初期化
         self.screenSize = screenSize;
-    },
-
+    }
+}
+var sendScore = {
     // スコア送信
     sendScore: function(score) {
         var self = this;
@@ -30,6 +31,7 @@ var ncmbController = {
            })
           .catch(function(err){
                 console.log(err);
+                alert("スコア送信に失敗しました");
             });
     },
 }

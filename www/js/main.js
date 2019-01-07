@@ -268,6 +268,7 @@ var BB = {
        BB.gameState = GAMESTATE_STOP;
         vibrate();
         ncmbController.sendScore(BB.score);
+        alert("Game Over");
     },
     
     // Game Clear
