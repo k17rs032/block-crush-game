@@ -314,3 +314,8 @@ Run `npm run document:generate` command, then documents has created in `jsdoc` d
 ## License
 
 Please read [LICENSE](https://github.com/NIFCloud-mbaas/ncmb_js/blob/master/LICENSE).
+
+
+
+https://www.google.com/search?q=monaca+%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E5%B4%A9%E3%81%97+%E3%83%8B%E3%83%95%E3%82%AF%E3%83%A9&oq=monaca+%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E5%B4%A9%E3%81%97%E3%80%80%E3%83%8B%E3%83%95%E3%82%AF%E3%83%A9&aqs=chrome..69i57j69i60.8507j0j7&sourceid=chrome&ie=UTF-8
+を見て他の手段を調べる？

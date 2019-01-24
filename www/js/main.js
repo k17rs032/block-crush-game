@@ -1,5 +1,5 @@
 (function() {
-    
+
 var SETTINGS_GRAVITY = 0.07,
     SETTINGS_FPS = 30,
     SETTINGS_BALL_NUM = 1,
@@ -10,7 +10,7 @@ var SETTINGS_GRAVITY = 0.07,
     SETTINGS_POINT = 1000,
     SETTINGS_POINT_SILVER = 200,
     SETTINGS_POINT_GOLD = 3000000;
-    
+
 var GAMESTATE_STOP = 0,
     GAMESTATE_PLAY = 1;
 
@@ -25,7 +25,6 @@ var imgPath = {
     'block_silver' : 'img/block_silver.png',
     'block_gold' : 'img/block_gold.png'
 };
-    
 
 var BB = {
     stage: new PIXI.Stage(0x000000),
@@ -38,21 +37,21 @@ var BB = {
     scoreLabel: null,
     accelLabel: null,
     isMouseDown: false,
-    
+
     // Create blocks map
     setMap: function() {
         var blockMap = [
             [null,      null,       null,       null,       null,       'blue',     null,       null,       null,       null],
             [null,      null,       null,       null,       'red',      'red',      'blue',     null,       null,       null],
             [null,      null,       null,       'red',      'red',      null,       null,       'blue',     null,       null],
-            [null,      null,       'red',      'red',      null,       null,       null,       null,       'blue',     null],    
-            [null,      'red',      'red',      null,       null,       'gold',     null,       null,       'silver',   'silver'],    
-            [null,      null,       'red',      'red',       null,       null,       null,       'silver',   'silver',   null],    
-            [null,      null,       null,       'red',      'red',       null,       'silver',   'silver',   null,       null],    
+            [null,      null,       'red',      'red',      null,       null,       null,       null,       'blue',     null],
+            [null,      'red',      'red',      null,       null,       'gold',     null,       null,       'silver',   'silver'],
+            [null,      null,       'red',      'red',       null,       null,       null,       'silver',   'silver',   null],
+            [null,      null,       null,       'red',      'red',       null,       'silver',   'silver',   null,       null],
             [null,      null,       null,       null,       'silver',   'silver',   'silver',   null,       null,       null],
             [null,      null,       null,       null,       null,       'silver',   null,       null,       null,       null]
         ];
-        
+
         for(j = 0; j < blockMap.length; j++) {
             for(i = 0; i < blockMap[j].length; i++) {
                 if(blockMap[j][i] !== null) {
@@ -61,7 +60,7 @@ var BB = {
             }
         }
     },
-       
+
     /**
      * @param {int} x
      * @param {int} y
@@ -79,88 +78,88 @@ var BB = {
                 break;
             case "gold":
                 var point = SETTINGS_POINT_GOLD;
-                break;    
+                break;
             default:
                 var point = SETTINGS_POINT;
                 color = "red";
                 break;
         }
-        
+
         var texture = PIXI.Texture.fromImage(imgPath["block_" + color], false);
         var block = new PIXI.Sprite(texture);
-     
+
         block.anchor.x = 0.5;
         block.anchor.y = 0.5;
-     
+
         block.position.x = x;
         block.position.y = y;
-        
+
         block.width = 30;
         block.height = 12;
-        
+
         block.point = point;
-     
+
         BB.stage.addChild(block);
         BB.blocks.push(block);
-        
+
         return block;
     },
-    
+
     // Create a ball and add it to PIXI.Stage
     addBall: function() {
         var texture = PIXI.Texture.fromImage(imgPath["ball"], false);
         var ball = new PIXI.Sprite(texture);
-     
+
         ball.anchor.x = 0.5;
         ball.anchor.y = 0.5;
-     
+
         ball.position.x = parseInt(BB.renderer.width * 0.5);
         ball.position.y = 200;
-        
+
         ball.width = 10;
         ball.height = 10;
-        
+
         ball.delta = {
             'x' : Math.random() - 0.5,
-            'y' : -0.4 
+            'y' : -0.4
         };
-     
+
         BB.stage.addChild(ball);
         BB.balls.push(ball);
     },
-    
+
     // Create a paddle and add it to PIXI.Stage
     addPaddle: function() {
         var texture = PIXI.Texture.fromImage(imgPath["paddle"], false);
         BB.paddle = new PIXI.Sprite(texture);
-     
+
         BB.paddle.anchor.x = 0.5;
         BB.paddle.anchor.y = 0.5;
-     
+
         BB.paddle.position.x = parseInt(BB.renderer.width * 0.5);
         BB.paddle.position.y = BB.renderer.height - 60;
-        
+
         BB.paddle.width = 60;
         BB.paddle.height = 10;
-        
+
         BB.paddle.accel = 0;
         BB.paddle.delta = {
             'x' : Math.random() - 0.5,
-            'y' : -3.8 
+            'y' : -3.8
         };
-     
+
         BB.stage.addChild(BB.paddle);
     },
-    
+
     /**
      * Add points to current score
      * @param {int} val points to add
      */
     addScore: function(val) {
         BB.score += parseInt(val);
-        BB.scoreLabel.setText(BB.score);        
+        BB.scoreLabel.setText(BB.score);
     },
-    
+
     /**
      * Set score
      * @param {int} val new score
@@ -169,28 +168,29 @@ var BB = {
         BB.score = val;
         BB.scoreLabel.setText(BB.score);
     },
-    
+
     /**
      * callback for PhoneGap Acceleration Watch
      * @param {Object} a a.x, a.y, a.z
      */
     updateAcceleration: function(a) {
         var accelText = "", ac = a.x.toFixed(2);
-            
+
         if(a.x > 0) accelText = '+' + String(ac);
         else accelText = String(ac);
-    
+
         // Use parameter x to move paddle
         if (BB.paddle !== null) {
           if (BB.paddle.accel / ac > 2.0) {
-            
+
           } else if (BB.paddle.accel / ac > 0) {
             BB.paddle.accel += ac * SETTINGS_PADDLE_ACCEL;
           } else {
             BB.paddle.accel = ac * SETTINGS_PADDLE_ACCEL;
           }
         }
-        
+
+        BB.accelLabel.setText(accelText);
     },
 
     // Reset current game and start new one
@@ -199,7 +199,7 @@ var BB = {
         for (var i = BB.stage.children.length - 1; i >= 0; i--) {
             BB.stage.removeChildAt(i);
         }
-        
+
         BB.balls = [];
         BB.blocks = [];
         BB.setMap();
@@ -207,7 +207,7 @@ var BB = {
             BB.addBall();
         }
         BB.addPaddle();
-        
+
         var resetLabel = new PIXI.Text("RESET", {font: "24px/1.2 vt", fill: "red"});
         resetLabel.position.x = 18;
         resetLabel.position.y = BB.renderer.height - 52;
@@ -215,12 +215,25 @@ var BB = {
         resetLabel.buttonMode = true;
         resetLabel.interactive = true;
         resetLabel.click = resetLabel.tap = function(data) {
-            BB.reset();  
+            BB.reset();
         };
         setTimeout(function() {
             resetLabel.setText("RESET"); //for Android
         }, 1000, resetLabel);
-        
+
+        var rankingLabel = new PIXI.Text("RANKING", {font: "24px/1.2 vt", fill: "red"});
+        rankingLabel.position.x = 80;
+        rankingLabel.position.y = BB.renderer.height - 52;
+        BB.stage.addChild(rankingLabel);
+        rankingLabel.buttonMode = true;
+        rankingLabel.interactive = true;
+        rankingLabel.click = rankingLabel.tap = function(data) {
+            ncmbController.showRanking();
+        };
+        setTimeout(function() {
+            rankingLabel.setText("RANKING"); //for Android
+        }, 1000, rankingLabel);
+
         var label = new PIXI.Text("SCORE:", {font: "24px/1.2 vt", fill: "red"});
         label.position.x = 20;
         label.position.y = 20;
@@ -228,29 +241,29 @@ var BB = {
         setTimeout(function() {
             label.setText("SCORE:"); //for Android
         }, 1000, label);
-        
+
         BB.scoreLabel = new PIXI.Text("0", {font: "24px/1.2 vt", fill: "white"});
         BB.scoreLabel.position.x = 90;
         BB.scoreLabel.position.y = 20;
         BB.stage.addChild(BB.scoreLabel);
         BB.setScore(0);
-        
+
         /*
         var label = new PIXI.Text("ACCEL:", {font: "24px/1.2 vt", fill: "red"});
         label.position.x = 160;
         label.position.y = 20;
         BB.stage.addChild(label);
         label.setText("ACCEL:"); //for Android
-        
+
         BB.accelLabel = new PIXI.Text("0", {font: "24px/1.2 vt", fill: "white"});
         BB.accelLabel.position.x = 230;
         BB.accelLabel.position.y = 20;
         BB.stage.addChild(BB.accelLabel);
         */
-        
+
         BB.gameState = GAMESTATE_PLAY;
     },
-    
+
     /**
      * Check whether the ball hits the object
      * @param {PIXI.Sprite} ball
@@ -262,67 +275,66 @@ var BB = {
             (ball.position.y > (obj.position.y - (obj.height * 0.5))) &&
             (ball.position.y < (obj.position.y + (obj.height * 0.5)));
     },
-    
-    // Game Over        
+
+    // Game Over
     endGame: function() {
-       BB.gameState = GAMESTATE_STOP;
+        BB.gameState = GAMESTATE_STOP;
         vibrate();
-        ncmbController.sendScore(BB.score);
-        alert("Game Over");
+        ncmbController.finishGame(BB.score);
     },
-    
+
     // Game Clear
     clearGame: function() {
-    // デフォルトで表示される「ゲームクリア」ダイアログは出さない
-    // if(typeof navigator.notification !== 'undefined') navigator.notification.alert("Cleared!", function(){}, "Congraturations");
-    // else alert("Cleared!");
+        // デフォルトで表示される「ゲームクリア」ダイアログは出さない
+        // if(typeof navigator.notification !== 'undefined') navigator.notification.alert("Cleared!", function(){}, "Congraturations");
+        // else alert("Cleared!");
 
-    BB.gameState = GAMESTATE_STOP;
-    ncmbController.sendScore(BB.score);
+        BB.gameState = GAMESTATE_STOP;
+        ncmbController.finishGame(BB.score);
     }
 }
-
 
 function init() {
     // Accelerometer
     /*
     if (typeof navigator.accelerometer !== 'undefined' && !accelerationWatch) {
         accelerationWatch = navigator.accelerometer.watchAcceleration(
-            BB.updateAcceleration, 
+            BB.updateAcceleration,
             function(ex) {
                 alert("accel fail (" + ex.name + ": " + ex.message + ")");
-            }, 
+            },
             {frequency: SETTINGS_ACCELEROMETER_RELOAD_FREQ}
         );
     }
     */
+
     BB.screenSize = setBound();
- 
+
     BB.renderer = (getUa() === "Android") ? new PIXI.CanvasRenderer(BB.screenSize.width, BB.screenSize.height) : new PIXI.autoDetectRenderer(BB.screenSize.width, BB.screenSize.height),
     BB.renderer.transparent = false;
     document.body.appendChild(BB.renderer.view);
-    
+
     setScale(BB.screenSize);
-    
+
     BB.reset();
-    
+
     // Event listeners to control the paddle
     window.addEventListener("touchmove", function(e) {
         BB.paddle.position.x = e.touches[0].clientX / BB.screenSize.zoom;
     });
-    
+
     window.addEventListener("mousedown", function(e) {
         BB.isMouseDown = true;
     });
-    
+
     window.addEventListener("mouseup", function(e) {
         BB.isMouseDown = false;
     });
-    
+
     window.addEventListener("mousemove", function(e) {
         if(BB.isMouseDown) BB.paddle.position.x = e.clientX;
     });
-    
+
     window.addEventListener("keydown", function(e) {
         switch (e.which) {
             case 37:
@@ -340,28 +352,42 @@ function init() {
     });
 
     requestAnimFrame(animate);
-    BB.accelLabel.setText(accelText);
+
+    // NCMB初期化
+    ncmbController.init(BB.screenSize);
+
+    // resume時にログイン処理を実行
+    if(getUa() !== false){
+        document.addEventListener("resume", onResume, false);
+    }
+    ncmbController.loginWithUUID();
+
+    // Onsen UI 初期化（フォーム・ランキング用）
+    ons.bootstrap();
 }
 
+function onResume() {
+    ncmbController.loginWithUUID();
+}
 
 // Render callback
 function animate() {
     if (BB.gameState === GAMESTATE_PLAY) {
-    
+
         //Move the paddle
         BB.paddle.position.x -= BB.paddle.accel;
         if (BB.paddle.position.x - (BB.paddle.width * 0.5) < 0) {
             BB.paddle.position.x = BB.paddle.width * 0.5;
             BB.paddle.accel = 0;
         } else if (BB.paddle.position.x + (BB.paddle.width * 0.5) > BB.renderer.width) {
-            BB.paddle.position.x = BB.renderer.width - (BB.paddle.width * 0.5); 
+            BB.paddle.position.x = BB.renderer.width - (BB.paddle.width * 0.5);
             BB.paddle.accel = 0;
         }
-        
+
         //Move balls
         for (var i = BB.balls.length - 1; i >= 0; i--) {
             var ball = BB.balls[i];
-            
+
             ball.position.x += ball.delta.x;
             if ((ball.position.x > BB.renderer.width) || (ball.position.x < 0)) {
                 ball.delta.x *= -1;
@@ -379,13 +405,13 @@ function animate() {
                 }
                 continue;
             }
-                
+
             // Ball&Paddle hit detection
             if (BB.isBallHit(ball, BB.paddle)) {
                 ball.delta.x += -1 * SETTINGS_BOUND_X * (BB.paddle.position.x - ball.position.x);
                 ball.delta.y *= -1 * SETTINGS_BOUND_Y;
             }
-            
+
             //Ball&blocks hit detection
             for(var j = BB.blocks.length - 1; j >= 0; j--) {
                 var block = BB.blocks[j];
@@ -404,14 +430,17 @@ function animate() {
             }
         }
     }
-    
+
     requestAnimFrame(animate);
     BB.renderer.render(BB.stage);
 }
 
 window.onload = function() {
-    if(getUa() === false) init();
-    else document.addEventListener("deviceready", init, false);
+    if(getUa() === false){
+        init();
+    } else {
+        document.addEventListener("deviceready", init, false);
+    }
 }
 
 function setScale(bound) {
@@ -424,7 +453,7 @@ function setScale(bound) {
         default:
             break;
     }
-    
+
     return bound;
 }
 
@@ -457,12 +486,13 @@ function vibrate(duration) {
 
 function getUa() {
     if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 ) {
-        return 'iPhone'; 
+        return 'iPhone';
     } else if(navigator.userAgent.indexOf('iPad') > 0) {
         return 'iPad';
     } else if(navigator.userAgent.indexOf('Android') > 0) {
         return 'Android';
     } else return false;
 }
+
 
 })();
